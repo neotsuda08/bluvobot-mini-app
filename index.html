@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <meta name="theme-color" content="#07140d">
   <title>Блювобот</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=3">
   <script src="https://telegram.org/js/telegram-web-app.js?61"></script>
 </head>
 <body>
@@ -14,7 +14,7 @@
 
     <header class="header">
       <span class="eyebrow">БЛЮВОБОТ</span>
-      <h1 id="title">ЖМИ НА<br>БЛЮВОТИНУ</h1>
+      <h1 id="title">ЖМИ НА<br>СМАЙЛИК</h1>
     </header>
 
     <section class="meter" aria-label="Обблёванность">
@@ -32,22 +32,36 @@
         id="vomit"
         type="button"
         data-testid="vomit-button"
-        aria-label="Блевануть"
-      >🤮</button>
+        aria-label="Нажать на смайлик"
+      >🙂</button>
       <div class="particles" id="particles" aria-hidden="true"></div>
     </section>
 
-    <p class="status" id="status">ЖЕЛУДОК ПОКА СПОКОЕН</p>
+    <p class="status" id="status">ПОКА ВСЁ НОРМАЛЬНО</p>
     <p class="hint" id="hint">НАЖИМАЙ БЫСТРЕЕ</p>
   </main>
 
   <div class="finish" id="finish" aria-hidden="true">
-    <div class="finish-emoji">🤮</div>
-    <div class="finish-kicker">ПОЗДРАВЛЯЕМ</div>
-    <div class="finish-title">ВАС<br>ОББЛЮВАЛИ</div>
-    <div class="finish-note">ВОЗВРАЩАЕМСЯ В БОТА…</div>
+    <div class="screen-mess" aria-hidden="true">
+      <div class="screen-splats" id="screen-splats"></div>
+      <div class="vomit-wash"></div>
+      <div class="edge-goo edge-goo-top"></div>
+      <div class="edge-goo edge-goo-bottom"></div>
+    </div>
+    <div class="finish-content">
+      <div class="finish-emoji">🤮</div>
+      <div class="finish-kicker">ПОЗДРАВЛЯЕМ</div>
+      <div class="finish-title">ВАС<br>ОББЛЮВАЛИ</div>
+      <div class="finish-note">НО ЭТО ЕЩЁ НЕ ВСЁ…</div>
+      <button
+        class="finish-action"
+        id="finish-action"
+        type="button"
+        data-testid="continue-button"
+      >УЗНАТЬ, ЧТО ДАЛЬШЕ</button>
+    </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

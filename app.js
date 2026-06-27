@@ -6,23 +6,41 @@ const status = document.getElementById("status");
 const hint = document.getElementById("hint");
 const particles = document.getElementById("particles");
 const finish = document.getElementById("finish");
+const finishAction = document.getElementById("finish-action");
+const app = document.getElementById("app");
+const screenSplats = document.getElementById("screen-splats");
 
 const statusByCount = [
-  "ЖЕЛУДОК ПОКА СПОКОЕН",
+  "ПОКА ВСЁ НОРМАЛЬНО",
   "НАЧАЛОСЬ…",
-  "ЧТО-ТО ПОДКАТЫВАЕТ",
-  "УЖЕ НЕ ОСТАНОВИТЬ",
-  "ДЕРЖИСЬ",
-  "ПОЛОВИНА. НАЗАД ПОЗДНО",
-  "СТАНОВИТСЯ ХУЖЕ",
-  "ЕЩЁ НЕМНОГО",
-  "ПОЧТИ…",
-  "ПОСЛЕДНИЙ РЫВОК",
-  "ВАС ОББЛЮВАЛИ",
+  "ОСТАНОВИСЬ!",
+  "ЕМУ НЕ НРАВИТСЯ",
+  "МНЕ ПЛОХО",
+  "ЭТО НЕ СМЕШНО",
+  "НЕ НАЖИМАЙ",
+  "НЕ НАДО ПЖ",
+  "...",
+  "ЭТО ПИЗДА",
+  "БУЭ",
+];
+
+const emojiByCount = [
+  "🙂",
+  "😐",
+  "😕",
+  "🙁",
+  "😟",
+  "😰",
+  "😣",
+  "😵",
+  "🤢",
+  "🤮",
+  "🤮",
 ];
 
 let count = 0;
 let completed = false;
+let resultSent = false;
 
 for (let index = 0; index < 10; index += 1) {
   const segment = document.createElement("span");
@@ -65,7 +83,34 @@ function animateEmoji() {
   vomitButton.classList.add("hit");
 }
 
+function makeScreenMess() {
+  const splatCount = 15;
+  screenSplats.replaceChildren();
+
+  for (let index = 0; index < splatCount; index += 1) {
+    const splat = document.createElement("span");
+    const size = 46 + Math.random() * 145;
+    splat.className = "screen-splat";
+    splat.style.setProperty("--left", `${4 + Math.random() * 92}%`);
+    splat.style.setProperty("--top", `${5 + Math.random() * 90}%`);
+    splat.style.setProperty("--size", `${size}px`);
+    splat.style.setProperty("--delay", `${260 + Math.random() * 650}ms`);
+    splat.style.setProperty("--rotate", `${Math.random() * 260 - 130}deg`);
+    splat.style.setProperty(
+      "--radius",
+      `${35 + Math.random() * 30}% ${36 + Math.random() * 32}% ${34 + Math.random() * 34}% ${38 + Math.random() * 28}%`,
+    );
+    screenSplats.appendChild(splat);
+  }
+}
+
 function render() {
+  vomitButton.textContent = emojiByCount[count];
+  vomitButton.setAttribute(
+    "aria-label",
+    count >= 9 ? "Блевануть" : "Нажать на смайлик",
+  );
+
   counter.textContent = `${count}/10`;
   status.textContent = statusByCount[count];
   hint.textContent = count === 9 ? "ЕЩЁ ОДИН РАЗ" : "НАЖИМАЙ БЫСТРЕЕ";
@@ -78,15 +123,25 @@ function complete() {
   completed = true;
   haptic("heavy");
   telegram?.HapticFeedback?.notificationOccurred("success");
+  makeScreenMess();
+  app.classList.add("final-hit");
   finish.classList.add("show");
   finish.setAttribute("aria-hidden", "false");
+}
+
+function returnToBot() {
+  if (resultSent) return;
+  resultSent = true;
+  haptic("heavy");
+  finishAction.disabled = true;
+  finishAction.textContent = "ОТКРЫВАЕМ СЕКРЕТ…";
 
   const payload = JSON.stringify({ action: "vomit_completed", count: 10 });
   if (telegram?.sendData) {
-    window.setTimeout(() => telegram.sendData(payload), 900);
-    window.setTimeout(() => telegram.close(), 1350);
+    telegram.sendData(payload);
+    window.setTimeout(() => telegram.close(), 450);
   } else {
-    document.querySelector(".finish-note").textContent = "ТЕСТОВЫЙ РЕЖИМ ЗАВЕРШЁН";
+    finishAction.textContent = "ОТКРОЙ MINI APP В TELEGRAM";
   }
 }
 
@@ -103,5 +158,7 @@ vomitButton.addEventListener("click", () => {
     window.setTimeout(complete, 360);
   }
 });
+
+finishAction.addEventListener("click", returnToBot);
 
 render();
