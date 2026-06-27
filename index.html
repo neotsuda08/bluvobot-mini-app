@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#07140d">
+  <title>Блювобот</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://telegram.org/js/telegram-web-app.js?61"></script>
+</head>
+<body>
+  <main class="app" id="app">
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="header">
+      <span class="eyebrow">БЛЮВОБОТ</span>
+      <h1 id="title">ЖМИ НА<br>БЛЮВОТИНУ</h1>
+    </header>
+
+    <section class="meter" aria-label="Обблёванность">
+      <div class="meter-row">
+        <span>ОББЛЁВАННОСТЬ</span>
+        <strong id="counter">0/10</strong>
+      </div>
+      <div class="segments" id="segments" aria-hidden="true"></div>
+    </section>
+
+    <section class="vomit-zone">
+      <div class="glow" aria-hidden="true"></div>
+      <button
+        class="vomit"
+        id="vomit"
+        type="button"
+        data-testid="vomit-button"
+        aria-label="Блевануть"
+      >🤮</button>
+      <div class="particles" id="particles" aria-hidden="true"></div>
+    </section>
+
+    <p class="status" id="status">ЖЕЛУДОК ПОКА СПОКОЕН</p>
+    <p class="hint" id="hint">НАЖИМАЙ БЫСТРЕЕ</p>
+  </main>
+
+  <div class="finish" id="finish" aria-hidden="true">
+    <div class="finish-emoji">🤮</div>
+    <div class="finish-kicker">ПОЗДРАВЛЯЕМ</div>
+    <div class="finish-title">ВАС<br>ОББЛЮВАЛИ</div>
+    <div class="finish-note">ВОЗВРАЩАЕМСЯ В БОТА…</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

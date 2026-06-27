@@ -1,0 +1,107 @@
+const telegram = window.Telegram?.WebApp;
+const vomitButton = document.getElementById("vomit");
+const counter = document.getElementById("counter");
+const segments = document.getElementById("segments");
+const status = document.getElementById("status");
+const hint = document.getElementById("hint");
+const particles = document.getElementById("particles");
+const finish = document.getElementById("finish");
+
+const statusByCount = [
+  "ЖЕЛУДОК ПОКА СПОКОЕН",
+  "НАЧАЛОСЬ…",
+  "ЧТО-ТО ПОДКАТЫВАЕТ",
+  "УЖЕ НЕ ОСТАНОВИТЬ",
+  "ДЕРЖИСЬ",
+  "ПОЛОВИНА. НАЗАД ПОЗДНО",
+  "СТАНОВИТСЯ ХУЖЕ",
+  "ЕЩЁ НЕМНОГО",
+  "ПОЧТИ…",
+  "ПОСЛЕДНИЙ РЫВОК",
+  "ВАС ОББЛЮВАЛИ",
+];
+
+let count = 0;
+let completed = false;
+
+for (let index = 0; index < 10; index += 1) {
+  const segment = document.createElement("span");
+  segment.className = "segment";
+  segments.appendChild(segment);
+}
+
+telegram?.ready();
+telegram?.expand();
+telegram?.setHeaderColor?.("#07140d");
+telegram?.setBackgroundColor?.("#07140d");
+telegram?.disableVerticalSwipes?.();
+
+function haptic(kind = "medium") {
+  telegram?.HapticFeedback?.impactOccurred(kind);
+}
+
+function makeSplat() {
+  const colors = ["#b7ff34", "#78e047", "#d8ff76", "#4bbd35"];
+  const amount = 7;
+
+  for (let index = 0; index < amount; index += 1) {
+    const particle = document.createElement("span");
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 55 + Math.random() * 100;
+    particle.className = "particle";
+    particle.style.setProperty("--x", `${Math.cos(angle) * distance}px`);
+    particle.style.setProperty("--y", `${Math.sin(angle) * distance}px`);
+    particle.style.setProperty("--r", `${Math.random() * 240 - 120}deg`);
+    particle.style.setProperty("--size", `${7 + Math.random() * 13}px`);
+    particle.style.setProperty("--color", colors[index % colors.length]);
+    particles.appendChild(particle);
+    particle.addEventListener("animationend", () => particle.remove(), { once: true });
+  }
+}
+
+function animateEmoji() {
+  vomitButton.classList.remove("hit");
+  void vomitButton.offsetWidth;
+  vomitButton.classList.add("hit");
+}
+
+function render() {
+  counter.textContent = `${count}/10`;
+  status.textContent = statusByCount[count];
+  hint.textContent = count === 9 ? "ЕЩЁ ОДИН РАЗ" : "НАЖИМАЙ БЫСТРЕЕ";
+  [...segments.children].forEach((segment, index) => {
+    segment.classList.toggle("on", index < count);
+  });
+}
+
+function complete() {
+  completed = true;
+  haptic("heavy");
+  telegram?.HapticFeedback?.notificationOccurred("success");
+  finish.classList.add("show");
+  finish.setAttribute("aria-hidden", "false");
+
+  const payload = JSON.stringify({ action: "vomit_completed", count: 10 });
+  if (telegram?.sendData) {
+    window.setTimeout(() => telegram.sendData(payload), 900);
+    window.setTimeout(() => telegram.close(), 1350);
+  } else {
+    document.querySelector(".finish-note").textContent = "ТЕСТОВЫЙ РЕЖИМ ЗАВЕРШЁН";
+  }
+}
+
+vomitButton.addEventListener("click", () => {
+  if (completed) return;
+
+  count += 1;
+  haptic(count >= 9 ? "heavy" : "medium");
+  animateEmoji();
+  makeSplat();
+  render();
+
+  if (count === 10) {
+    window.setTimeout(complete, 360);
+  }
+});
+
+render();
