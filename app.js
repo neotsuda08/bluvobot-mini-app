@@ -24,6 +24,20 @@ const statusByCount = [
   "ВАС ОББЛЮВАЛИ",
 ];
 
+const emojiByCount = [
+  "🙂",
+  "😐",
+  "😕",
+  "🙁",
+  "😟",
+  "😰",
+  "😣",
+  "😵‍💫",
+  "🤢",
+  "🤮",
+  "🤮",
+];
+
 let count = 0;
 let completed = false;
 let resultSent = false;
@@ -91,6 +105,12 @@ function makeScreenMess() {
 }
 
 function render() {
+  vomitButton.textContent = emojiByCount[count];
+  vomitButton.setAttribute(
+    "aria-label",
+    count >= 9 ? "Блевануть" : "Нажать на смайлик",
+  );
+
   counter.textContent = `${count}/10`;
   status.textContent = statusByCount[count];
   hint.textContent = count === 9 ? "ЕЩЁ ОДИН РАЗ" : "НАЖИМАЙ БЫСТРЕЕ";
