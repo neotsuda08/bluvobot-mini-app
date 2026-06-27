@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <meta name="theme-color" content="#07140d">
   <title>Блювобот</title>
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
   <script src="https://telegram.org/js/telegram-web-app.js?61"></script>
 </head>
 <body>
@@ -52,10 +52,16 @@
       <div class="finish-emoji">🤮</div>
       <div class="finish-kicker">ПОЗДРАВЛЯЕМ</div>
       <div class="finish-title">ВАС<br>ОББЛЮВАЛИ</div>
-      <div class="finish-note">ВОЗВРАЩАЕМСЯ В БОТА…</div>
+      <div class="finish-note">НО ЭТО ЕЩЁ НЕ ВСЁ…</div>
+      <button
+        class="finish-action"
+        id="finish-action"
+        type="button"
+        data-testid="continue-button"
+      >УЗНАТЬ, ЧТО ДАЛЬШЕ</button>
     </div>
   </div>
 
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

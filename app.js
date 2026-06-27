@@ -6,6 +6,7 @@ const status = document.getElementById("status");
 const hint = document.getElementById("hint");
 const particles = document.getElementById("particles");
 const finish = document.getElementById("finish");
+const finishAction = document.getElementById("finish-action");
 const app = document.getElementById("app");
 const screenSplats = document.getElementById("screen-splats");
 
@@ -25,6 +26,7 @@ const statusByCount = [
 
 let count = 0;
 let completed = false;
+let resultSent = false;
 
 for (let index = 0; index < 10; index += 1) {
   const segment = document.createElement("span");
@@ -105,13 +107,21 @@ function complete() {
   app.classList.add("final-hit");
   finish.classList.add("show");
   finish.setAttribute("aria-hidden", "false");
+}
+
+function returnToBot() {
+  if (resultSent) return;
+  resultSent = true;
+  haptic("heavy");
+  finishAction.disabled = true;
+  finishAction.textContent = "ОТКРЫВАЕМ СЕКРЕТ…";
 
   const payload = JSON.stringify({ action: "vomit_completed", count: 10 });
   if (telegram?.sendData) {
-    window.setTimeout(() => telegram.sendData(payload), 2850);
-    window.setTimeout(() => telegram.close(), 3350);
+    telegram.sendData(payload);
+    window.setTimeout(() => telegram.close(), 450);
   } else {
-    document.querySelector(".finish-note").textContent = "ТЕСТОВЫЙ РЕЖИМ ЗАВЕРШЁН";
+    finishAction.textContent = "ОТКРОЙ MINI APP В TELEGRAM";
   }
 }
 
@@ -128,5 +138,7 @@ vomitButton.addEventListener("click", () => {
     window.setTimeout(complete, 360);
   }
 });
+
+finishAction.addEventListener("click", returnToBot);
 
 render();
